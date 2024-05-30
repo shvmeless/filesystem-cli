@@ -1,0 +1,3 @@
+{
+  "extends": "@shvmerc/eslint-config/standard-ts"
+}

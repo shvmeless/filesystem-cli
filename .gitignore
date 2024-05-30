@@ -1,0 +1,53 @@
+# LOGS
+lerna-debug.log*
+.pnpm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+npm-debug.log*
+*.log
+logs
+
+# DEPENDENCIES
+package-lock.json
+jspm_packages/
+node_modules/
+
+# CACHE
+.cache/
+*.tsbuildinfo
+.stylelintcache
+.eslintcache
+.parcel-cache
+.cache
+.npm
+
+# NPM
+*.tgz
+
+# DOTENV
+.env.development.local
+.env.production.local
+.env.test.local
+.env.local
+.env
+
+# YARN
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# COVERAGE
+coverage/
+
+# TEMP
+temp/
+tmp/
+
+# PRODUCTION
+output/
+public/
+build/
+dist/
+out/

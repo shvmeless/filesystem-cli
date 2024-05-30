@@ -1,0 +1,42 @@
+{
+  "name": "@shvmeless/filesystem-cli",
+  "description": "Different commands to work with the filesystem.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "Luciano Aedo Puga",
+    "url": "https://github.com/shvmeless"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shvmeless/filesystem-cli.git"
+  },
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "./dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "lint": "eslint ./src --ext .ts",
+    "build": "rm -rf ./dist && tsc",
+    "dev": "ts-node ./src/index.ts",
+    "dev:watch": "ts-node-dev --respawn --clear ./src/index.ts"
+  },
+  "devDependencies": {
+    "@shvmerc/eslint-config": "^0.2.1-alpha",
+    "@stylistic/eslint-plugin": "^2.1.0",
+    "@types/node": "^20.12.13",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^17.7.0",
+    "eslint-plugin-promise": "^6.2.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
+  }
+}
