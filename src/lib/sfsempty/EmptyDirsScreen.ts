@@ -64,8 +64,9 @@ export class EmptyDirsScreen {
     })
 
     this.screen.key(['space'], () => {
-      this.manager.delete(() => {
-        this.render()
+      this.manager.click({
+        onDelete: () => { this.render() },
+        onRestore: () => { this.render() },
       })
       this.render()
     })
@@ -139,7 +140,7 @@ export class EmptyDirsScreen {
       this.manager.iterate((item) => {
 
         const isCurrent = (item.index === current?.index)
-        const isDeleting = (item.status === 'deleting')
+        const isWorking = (item.status === 'deleting' || item.status === 'restoring')
         const isDeleted = (item.status === 'deleted')
         const isError = (item.status === 'error')
 
@@ -157,8 +158,8 @@ export class EmptyDirsScreen {
           content,
           tags: true,
           style: {
-            fg: isCurrent ? 'white' : isDeleting ? 'yellow' : (isDeleted || isError) ? 'red' : '',
-            bg: isCurrent ? 'black' : '',
+            inverse: isCurrent,
+            fg: isWorking ? 'yellow' : (isDeleted || isError) ? 'red' : '',
           },
         })
 

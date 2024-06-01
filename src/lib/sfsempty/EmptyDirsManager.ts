@@ -1,9 +1,9 @@
 // IMPORTS
 import { logger } from '../common/Logger'
-import { rmdir } from 'fs/promises'
+import { mkdir, rmdir } from 'fs/promises'
 
 // TYPE
-export type EmptyDirectoryStatus = 'default' | 'deleting' | 'deleted' | 'error'
+export type EmptyDirectoryStatus = 'default' | 'deleting' | 'deleted' | 'restoring' | 'restored' | 'error'
 
 // INTERFACE
 export interface EmptyDirectoryManagerItem {
@@ -115,25 +115,65 @@ export class EmptyDirsManager {
     return this.setCurrentIndex(this._current + 1)
   }
 
-  // METHOD
-  public delete (onDelete: () => void = () => {}): void {
-
-    const item = this._directories[this._current]
-    if (item === undefined) return
-    if (item.status !== 'default') return
+  // PRIVATE
+  private delete (item: EmptyDirectoryManagerItem, callback: () => void): void {
 
     item.status = 'deleting'
     logger.info(`Trying to delete the empty directory: ${item.path}`)
 
     rmdir(item.path).then(() => {
+
       item.status = 'deleted'
       this._deleted++
-      onDelete()
+      callback()
       logger.info(`Deleted the empty directory: ${item.path}`)
+
     }).catch((error) => {
+
       item.status = 'error'
       logger.error(error)
+
     })
+
+  }
+
+  // PRIVATE
+  private restore (item: EmptyDirectoryManagerItem, callback: () => void): void {
+
+    item.status = 'restoring'
+    logger.info(`Restoring the empty directory: ${item.path}`)
+
+    mkdir(item.path, { recursive: true }).then(() => {
+
+      item.status = 'restored'
+      this._deleted--
+      callback()
+      logger.info(`Restored the empty directory: ${item.path}`)
+
+    }).catch((error) => {
+
+      item.status = 'error'
+      logger.error(error)
+
+    })
+
+  }
+
+  // METHOD
+  public click ({
+    onDelete = () => {},
+    onRestore = () => {},
+  }: {
+    onDelete: () => void
+    onRestore: () => void
+  }): void {
+
+    const item = this._directories[this._current]
+    if (item === undefined) return
+
+    if (item.status === 'default') this.delete(item, onDelete)
+    else if (item.status === 'restored') this.delete(item, onDelete)
+    else if (item.status === 'deleted') this.restore(item, onRestore)
 
   }
 
