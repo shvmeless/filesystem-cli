@@ -2,19 +2,26 @@
 import { logger } from '../common/Logger'
 import { existsSync, statSync } from 'fs'
 import { readdir } from 'fs/promises'
-import { join } from 'path'
+import { basename, join } from 'path'
 
 // FUNCTION
-async function searchEmptyDirs (origin: string, callback: (path: string, empty: boolean) => void): Promise<void> {
+async function searchEmptyDirs (options: {
+  origin: string
+  exclude?: Array<string>
+  callback: (path: string, empty: boolean) => void
+}): Promise<void> {
+
+  const { origin, callback } = options
+  const exclude = new Set(options.exclude ?? [])
 
   const targets: Array<string> = [origin]
-
   while (targets.length > 0) {
     try {
 
       const target = targets.shift()
 
       if (target === undefined) break
+      if (exclude.has(basename(target))) continue
       if (!existsSync(target)) continue
       if (!statSync(target).isDirectory()) continue
 

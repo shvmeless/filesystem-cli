@@ -10,14 +10,16 @@ import { cwd } from 'process'
 program
   .version('0.1.0')
   .option('-d, --directory <dir>', 'Path to the directory to start the search.', cwd())
+  .option('--exclude [dirs...]', 'Directories to exclude from the search.', [])
   .action((options) => {
 
-    const path = resolve(cwd(), options.directory as string)
+    const origin = resolve(cwd(), options.directory as string)
+    const exclude = options.exclude as Array<string>
 
-    const manager = new EmptyDirsManager(path)
+    const manager = new EmptyDirsManager(origin)
     const screen = new EmptyDirsScreen(manager)
 
-    FileSystem.searchEmptyDirs(path, (path, empty) => {
+    const callback = (path: string, empty: boolean): void => {
 
       manager.increaseAnalyzed()
 
@@ -26,7 +28,9 @@ program
       manager.add(path)
       screen.render()
 
-    }).then(() => {
+    }
+
+    FileSystem.searchEmptyDirs({ origin, exclude, callback }).then(() => {
       manager.searching = false
       screen.render()
     }).catch(console.error)
