@@ -9,7 +9,7 @@ import { cwd } from 'process'
 // PROGRAM
 program
   .version('0.1.0')
-  .option('-d, --directory <dir>', 'Path to the directory to start the search.', cwd())
+  .option('-d, --directory <dir>', 'Path of the directory from where to start the search.', cwd())
   .option('--exclude [dirs...]', 'Directories to exclude from the search.', [])
   .action((options) => {
     try {
