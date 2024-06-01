@@ -1,7 +1,7 @@
 {
-  "name": "@shvmeless/filesystem-cli",
-  "description": "Different commands to work with the filesystem.",
-  "version": "0.1.0",
+  "name": "@shvmerc/filesystem-cli",
+  "description": "A set of commands to work more easily with the filesystem in the terminal.",
+  "version": "0.1.0-alpha",
   "license": "MIT",
   "author": {
     "name": "Luciano Aedo Puga",
@@ -11,15 +11,21 @@
     "type": "git",
     "url": "https://github.com/shvmeless/filesystem-cli.git"
   },
-  "main": "./dist/index.js",
-  "exports": {
-    ".": "./dist/index.js"
-  },
   "files": [
     "./dist"
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "keywords": [
+    "filesystem",
+    "delete",
+    "clean",
+    "cli",
+    "fs"
+  ],
+  "bin": {
+    "sfsempty": "./dist/index.js"
   },
   "scripts": {
     "lint": "eslint ./src --ext .ts",
