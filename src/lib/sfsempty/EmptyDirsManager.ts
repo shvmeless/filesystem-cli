@@ -21,9 +21,43 @@ export interface EmptyDirItemOutput {
 // CLASS
 export class EmptyDirsManager {
 
-  // PROPERTIES
+  // PROPS
+  private readonly _path: string = ''
+  private _searching: boolean = true
+  private _deleted: number = 0
+  private _analyzed: number = 0
   private readonly _directories: Array<EmptyDirectoryManagerItem> = []
   private _current: number = 0
+
+  // CONSTRUCTOR
+  constructor (path: string) {
+    this._path = path
+  }
+
+  // GETTER
+  public get searching (): boolean {
+    return this._searching
+  }
+
+  // SETTER
+  public set searching (value: boolean) {
+    this._searching = value
+  }
+
+  // GETTER
+  public get path (): string {
+    return this._path
+  }
+
+  // GETTER
+  public get deleted (): number {
+    return this._deleted
+  }
+
+  // GETTER
+  public get analyzed (): number {
+    return this._analyzed
+  }
 
   // GETTER
   public get size (): number {
@@ -37,6 +71,11 @@ export class EmptyDirsManager {
     const current = this._directories[this._current]
     if (current === undefined) return undefined
     return { ...current, index: this._current }
+  }
+
+  // METHOD
+  public increaseAnalyzed (): void {
+    this._analyzed++
   }
 
   // METHOD
@@ -88,6 +127,7 @@ export class EmptyDirsManager {
 
     rmdir(item.path).then(() => {
       item.status = 'deleted'
+      this._deleted++
       onDelete()
       logger.info(`Deleted the empty directory: ${item.path}`)
     }).catch((error) => {

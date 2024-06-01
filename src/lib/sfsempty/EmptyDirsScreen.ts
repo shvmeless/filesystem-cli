@@ -9,6 +9,7 @@ export class EmptyDirsScreen {
 
   // PROPERTIES
   private readonly screen: blessed.Widgets.Screen
+  private readonly info: blessed.Widgets.BoxElement
   private readonly main: blessed.Widgets.BoxElement
   private readonly manager: EmptyDirsManager
 
@@ -22,9 +23,18 @@ export class EmptyDirsScreen {
       title: 'my window title',
     })
 
-    this.main = blessed.box({
+    this.info = blessed.box({
       left: 0,
       top: 0,
+      width: '100%',
+      height: 9,
+    })
+
+    this.screen.append(this.info)
+
+    this.main = blessed.box({
+      left: 0,
+      top: this.info.height,
       width: '100%',
       scrollable: true,
     })
@@ -63,6 +73,59 @@ export class EmptyDirsScreen {
     // RENDER
     this.render()
 
+  }
+
+  // METHOD
+  public refreshInfo (): void {
+    try {
+
+      this.info.setContent('')
+      this.info.children.forEach((child) => {
+        child.destroy()
+      })
+
+      this.info.append(blessed.text({
+        left: 0,
+        top: 1,
+        content: `Target: {bold}${this.manager.path}{/bold}`,
+        tags: true,
+      }))
+
+      this.info.append(blessed.text({
+        left: 0,
+        top: 3,
+        padding: { left: 1 },
+        content: `Directories analyzed: {bold}${this.manager.analyzed}{/bold}`,
+        tags: true,
+        style: {},
+      }))
+
+      this.info.append(blessed.text({
+        left: 0,
+        top: 4,
+        padding: { left: 1 },
+        content: `Empty directories found: {bold}${this.manager.size}{/bold}`,
+        tags: true,
+        style: {},
+      }))
+
+      this.info.append(blessed.text({
+        left: 0,
+        top: 5,
+        padding: { left: 1 },
+        content: `Deleted directories: {bold}${this.manager.deleted}{/bold}`,
+        tags: true,
+        style: {},
+      }))
+
+      this.info.append(blessed.text({
+        left: 0,
+        top: 7,
+        content: (this.manager.searching ? 'Searching...' : '{bold}Search completed!{/bold}'),
+        tags: true,
+      }))
+
+    } catch (error) { logger.error(error) }
   }
 
   // METHOD
@@ -108,6 +171,7 @@ export class EmptyDirsScreen {
 
   // METHOD
   public render (): void {
+    this.refreshInfo()
     this.refreshMain()
     this.screen.render()
   }
