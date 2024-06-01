@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { EmptyDirsManager } from './lib/sfsempty/EmptyDirsManager'
 import { EmptyDirsScreen } from './lib/sfsempty/EmptyDirsScreen'
-import { FileSystem } from './lib/common/Filesystem'
+import { logger } from './lib/common/Logger'
 import { program } from 'commander'
 import { resolve } from 'path'
 import { cwd } from 'process'
@@ -12,28 +12,18 @@ program
   .option('-d, --directory <dir>', 'Path to the directory to start the search.', cwd())
   .option('--exclude [dirs...]', 'Directories to exclude from the search.', [])
   .action((options) => {
+    try {
 
-    const origin = resolve(cwd(), options.directory as string)
-    const exclude = options.exclude as Array<string>
+      const path = resolve(cwd(), options.directory as string)
+      const exclude = options.exclude as Array<string>
+      const onSearch = (): void => { screen.render() }
+      const onComplete = (): void => { screen.render() }
 
-    const manager = new EmptyDirsManager(origin)
-    const screen = new EmptyDirsScreen(manager)
+      const manager = new EmptyDirsManager({ path, exclude, onSearch, onComplete })
+      const screen = new EmptyDirsScreen(manager)
 
-    const callback = (path: string, empty: boolean): void => {
+      manager.search()
 
-      manager.increaseAnalyzed()
-
-      if (!empty) return
-
-      manager.add(path)
-      screen.render()
-
-    }
-
-    FileSystem.searchEmptyDirs({ origin, exclude, callback }).then(() => {
-      manager.searching = false
-      screen.render()
-    }).catch(console.error)
-
+    } catch (error) { logger.error(error) }
   })
   .parse(process.argv)

@@ -48,23 +48,23 @@ export class EmptyDirsScreen {
     })
 
     this.screen.key(['up', 'k'], () => {
-      const current = this.manager.getCurrent()
-      const previous = this.manager.previous()
+      const current = this.manager.getCurrentItem()
+      const previous = this.manager.previousItem()
       if (current?.index === previous?.index) return
       if (previous !== undefined) this.main.scrollTo(previous.index)
       this.render()
     })
 
     this.screen.key(['down', 'j'], () => {
-      const current = this.manager.getCurrent()
-      const next = this.manager.next()
+      const current = this.manager.getCurrentItem()
+      const next = this.manager.nextItem()
       if (current?.index === next?.index) return
       if (next !== undefined) this.main.scrollTo(next.index)
       this.render()
     })
 
     this.screen.key(['space'], () => {
-      this.manager.click({
+      this.manager.clickCurrentItem({
         onDelete: () => { this.render() },
         onRestore: () => { this.render() },
       })
@@ -135,9 +135,9 @@ export class EmptyDirsScreen {
 
       this.main.setContent('')
 
-      const current = this.manager.getCurrent()
+      const current = this.manager.getCurrentItem()
 
-      this.manager.iterate((item) => {
+      this.manager.forEach((item) => {
 
         const isCurrent = (item.index === current?.index)
         const isWorking = (item.status === 'deleting' || item.status === 'restoring')
