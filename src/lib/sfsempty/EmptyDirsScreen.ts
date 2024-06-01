@@ -71,6 +71,12 @@ export class EmptyDirsScreen {
       this.render()
     })
 
+    this.screen.key(['C-r'], () => {
+      this.manager.reset()
+      this.manager.search()
+      this.render()
+    })
+
     // RENDER
     this.render()
 
@@ -81,9 +87,7 @@ export class EmptyDirsScreen {
     try {
 
       this.info.setContent('')
-      this.info.children.forEach((child) => {
-        child.destroy()
-      })
+      this.info.children.forEach((child) => { child.destroy() })
 
       this.info.append(blessed.text({
         left: 0,
@@ -134,6 +138,7 @@ export class EmptyDirsScreen {
     try {
 
       this.main.setContent('')
+      this.main.children.forEach((child) => { child.destroy() })
 
       const current = this.manager.getCurrentItem()
 

@@ -26,7 +26,7 @@ export class EmptyDirsManager {
   private readonly _path: string
   private readonly _exclude: Array<string>
 
-  private readonly _directories: Array<EmptyDirectoryManagerItem>
+  private _directories: Array<EmptyDirectoryManagerItem>
   private _current: number
 
   private _analyzed: number
@@ -64,6 +64,15 @@ export class EmptyDirsManager {
   public get searching (): boolean { return this._searching }
   public get deleted (): number { return this._deleted }
   public get size (): number { return this._directories.length }
+
+  // ITEMS
+  public reset (): void {
+    this._analyzed = 0
+    this._searching = true
+    this._deleted = 0
+    this._directories = []
+    this._current = 0
+  }
 
   // ITEMS
   public search (): void {
